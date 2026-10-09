@@ -37,12 +37,13 @@ Juego incremental pixel art donde el jugador extrae minerales preciosos haciendo
 - [x] Configurar `base: './'` en Vite para garantizar compatibilidad de rutas relativas.
 - [x] Servidor Vite en ejecución y validado con browser subagent.
 
-#### Fase F: Preparación para GitHub Pages
+#### Fase F: Preparación y Publicación en GitHub Pages
 - [x] Crear [.gitignore](file:///c:/Users/josea/Downloads/prueba/.gitignore) para proteger el repositorio de `node_modules` y builds locales.
 - [x] Configurar GitHub Actions en [.github/workflows/deploy.yml](file:///c:/Users/josea/Downloads/prueba/.github/workflows/deploy.yml) para despliegue automático en GitHub Pages.
+- [x] Despliegue de producción completado con éxito y validado en vivo con navegador en https://j0seponce.github.io/pixel-miner-clicker/
 
 ---
 
 ## Punto de Retorno (Checkpoint)
 - **Último archivo modificado:** `.gitignore`, `.github/workflows/deploy.yml`, `project-state.md`.
-- **Siguiente acción inmediata:** Proyecto listo para publicar en GitHub Pages.
+- **Siguiente acción inmediata:** Juego publicado y 100% operativo en GitHub Pages para pruebas públicas.
