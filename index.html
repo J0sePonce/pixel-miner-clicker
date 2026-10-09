@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pixel Miner Clicker - Retro Incremental Game</title>
+    <!-- Google Fonts: Press Start 2P -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app" class="app-container">
+      <!-- HUD Superior: Cabecera y Contadores de Recursos -->
+      <header id="hud" class="hud-panel pixel-box">
+        <div class="game-branding">
+          <span class="pickaxe-icon">⛏️</span>
+          <h1 class="game-title">PIXEL MINER</h1>
+        </div>
+        <div class="hud-stats">
+          <div class="stat-badge ore-badge">
+            <span class="stat-icon">💎</span>
+            <div class="stat-info">
+              <span class="stat-label">MINERALES</span>
+              <span id="ore-count" class="stat-value">0</span>
+            </div>
+          </div>
+          <div class="stat-badge mps-badge">
+            <span class="stat-icon">⚡</span>
+            <div class="stat-info">
+              <span class="stat-label">PRODUCCIÓN</span>
+              <span id="mps-count" class="stat-value">0.0 /s</span>
+            </div>
+          </div>
+          <button id="mute-btn" class="pixel-button ctrl-btn" type="button" aria-label="Alternar sonido">
+            <span id="mute-icon">🔊</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Contenedor Principal: Layout Centrado y Responsive -->
+      <div class="main-layout">
+        <!-- Zona Central: Área de Minería y Clic Principal con Tema Cueva Cálida -->
+        <main id="mining-stage" class="mining-stage cave-environment pixel-box">
+          <!-- Antorchas de cueva -->
+          <div class="cave-torch torch-left" aria-hidden="true">
+            <div class="torch-mount"></div>
+            <div class="torch-body"></div>
+            <div class="torch-flame"></div>
+            <div class="torch-glow"></div>
+          </div>
+          <div class="cave-torch torch-right" aria-hidden="true">
+            <div class="torch-mount"></div>
+            <div class="torch-body"></div>
+            <div class="torch-flame"></div>
+            <div class="torch-glow"></div>
+          </div>
+
+          <!-- Cabecera de la Cueva / Indicadores de Estado -->
+          <div class="stage-header">
+            <div class="vein-info-badge">
+              <span class="vein-icon">⛏️</span>
+              <span id="vein-name" class="vein-name-text">VETA DE COBRE #1</span>
+            </div>
+
+            <!-- Medidor de Combo / Fiebre Minera -->
+            <div id="fever-meter-container" class="fever-meter-container">
+              <div class="fever-meter-header">
+                <span class="fever-label">FIEBRE MINERA</span>
+                <span id="combo-multiplier-badge" class="combo-multiplier-badge">x1.0</span>
+              </div>
+              <div class="fever-progress-track">
+                <div id="fever-progress-bar" class="fever-progress-bar" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- Barra de Dureza de la Roca -->
+            <div id="rock-health-container" class="rock-health-container">
+              <div class="rock-health-header">
+                <span class="rock-health-label">DUREZA DE ROCA</span>
+                <span id="rock-health-text" class="rock-health-text">25 / 25</span>
+              </div>
+              <div class="rock-health-track">
+                <div id="rock-health-bar" class="rock-health-bar" style="width: 100%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contenedor del Botón 3D Colosal (estilo "Click the Button") -->
+          <div class="mine-interaction-container">
+            <div class="button-pedestal-3d">
+              <button
+                id="mine-button"
+                class="button-3d-colossal"
+                type="button"
+                aria-label="Pulsar el Gran Botón Minero"
+              >
+                <!-- Cara superior del botón 3D con gema y remaches -->
+                <div class="btn-3d-surface">
+                  <div class="btn-3d-rivet tl"></div>
+                  <div class="btn-3d-rivet tr"></div>
+                  <div class="btn-3d-rivet bl"></div>
+                  <div class="btn-3d-rivet br"></div>
+
+                  <div class="pixel-ore-sprite">
+                    <div id="ore-gem-element" class="ore-gem">
+                      <div class="gem-facet f-light"></div>
+                      <div class="gem-facet f-mid"></div>
+                      <div class="gem-facet f-dark"></div>
+                      <div class="gem-sparkle s1"></div>
+                      <div class="gem-sparkle s2"></div>
+                    </div>
+                  </div>
+
+                  <span class="button-action-label">¡PULSAR!</span>
+                </div>
+                <!-- Sombra / Profundidad lateral 3D que se comprime físicamente -->
+                <div class="btn-3d-depth"></div>
+              </button>
+            </div>
+            <!-- Capa de puntos débiles y partículas -->
+            <div id="weakspot-layer" class="weakspot-layer"></div>
+            <div id="click-feedback-layer" class="click-feedback-layer"></div>
+          </div>
+
+          <!-- Capa para eventos flotantes (Geodas voladoras) -->
+          <div id="floating-events-layer" class="floating-events-layer"></div>
+
+          <div class="mining-prompt">
+            <span class="blink-text">▶ ¡GOLPEA RÍTMICAMENTE PARA ACTIVAR LA FIEBRE! ◀</span>
+          </div>
+        </main>
+
+        <!-- Barra Lateral Derecha: Tienda de Mejoras -->
+        <aside id="shop-sidebar" class="shop-sidebar pixel-box">
+          <div class="shop-header">
+            <h2 class="shop-title">TIENDA MINERA</h2>
+            <span class="shop-subtitle">MEJORAS & EQUIPO</span>
+          </div>
+
+          <div id="shop-list" class="shop-list">
+            <!-- Esqueleto previo de items para validar la maquetación -->
+            <div class="shop-item pixel-box">
+              <div class="item-icon-box">⛏️</div>
+              <div class="item-details">
+                <div class="item-name">Pico de Madera</div>
+                <div class="item-benefit">+0.5 /s</div>
+                <div class="item-cost">Coste: 15 💎</div>
+              </div>
+              <button class="buy-btn pixel-button" disabled>NIV. 0</button>
+            </div>
+
+            <div class="shop-item pixel-box">
+              <div class="item-icon-box">👷</div>
+              <div class="item-details">
+                <div class="item-name">Minero Aprendiz</div>
+                <div class="item-benefit">+4.0 /s</div>
+                <div class="item-cost">Coste: 100 💎</div>
+              </div>
+              <button class="buy-btn pixel-button" disabled>NIV. 0</button>
+            </div>
+
+            <div class="shop-item pixel-box">
+              <div class="item-icon-box">⚙️</div>
+              <div class="item-details">
+                <div class="item-name">Taladro de Vapor</div>
+                <div class="item-benefit">+32.0 /s</div>
+                <div class="item-cost">Coste: 1.1K 💎</div>
+              </div>
+              <button class="buy-btn pixel-button" disabled>NIV. 0</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Barra de Estado Inferior -->
+      <footer id="status-bar" class="status-bar pixel-box">
+        <div class="status-left">
+          <span id="save-indicator" class="status-indicator">● GUARDADO LOCAL</span>
+          <span class="status-ver">V0.1.0-TS</span>
+        </div>
+        <div class="status-right">
+          <button id="reset-btn" class="pixel-button reset-button" type="button" title="Reiniciar partida desde cero">
+            ⚠️ HARD RESET
+          </button>
+        </div>
+      </footer>
+
+      <!-- Modal Pixel Art de Confirmación de Hard Reset -->
+      <div id="reset-modal" class="pixel-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="pixel-modal pixel-box">
+          <div class="modal-header">
+            <span class="modal-icon">⚠️</span>
+            <h2 id="modal-title" class="modal-title">¿REINICIAR PARTIDA?</h2>
+          </div>
+          <div class="modal-body">
+            <p class="modal-text">Esta acción es permanente e irreversible:</p>
+            <ul class="modal-warning-list">
+              <li>💥 Se perderán todos tus minerales</li>
+              <li>⛏️ Todas las mejoras volverán a Nivel 0</li>
+              <li>🪨 Volverás a la Veta de Cobre inicial</li>
+            </ul>
+          </div>
+          <div class="modal-actions">
+            <button id="modal-confirm-btn" class="pixel-button modal-btn-danger" type="button">
+              💥 SÍ, BORRAR TODO
+            </button>
+            <button id="modal-cancel-btn" class="pixel-button modal-btn-cancel" type="button">
+              ✖️ CANCELAR
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenedor para Avisos / Notificaciones Flotantes (Toasts) -->
+      <div id="toast-layer" class="toast-layer"></div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
